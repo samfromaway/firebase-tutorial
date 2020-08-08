@@ -1,59 +1,112 @@
-import React, { useState, useEffect } from "react";
-import firebase from "./firebase";
+import React, { useState, useEffect, Fragment } from 'react';
+import firebase from './firebase';
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [title, setTitle] = useState('');
+  const [desc, setDesc] = useState('');
 
-  const ref = firebase.firestore().collection("YOUR_COLLECTIONS_NAME");
+  const ref = firebase.firestore().collection('schools');
 
-  //REALTIME FUNCTION
-  // function getSchools() {
+  //REALTIME GET FUNCTION
+  function getSchools() {
+    setLoading(true);
+    ref.onSnapshot((querySnapshot) => {
+      const items = [];
+      querySnapshot.forEach((doc) => {
+        items.push(doc.data());
+      });
+      setSchools(items);
+      setLoading(false);
+    });
+  }
+
+  // SINGLE GET FUNCTION
+  // You might want to add a .catch() method for errors
+  // function getSchools2() {
   //   setLoading(true);
-  //   ref.onSnapshot((querySnapshot) => {
-  //     const items = [];
-  //     querySnapshot.forEach((doc) => {
-  //       items.push(doc.data());
-  //     });
+  //   ref.get().then((item) => {
+  //     const items = item.docs.map((doc) => doc.data());
   //     setSchools(items);
   //     setLoading(false);
   //   });
   // }
 
-  // SINGLE GET FUNCTION
-  // You might want to add a .catch() method for errors
-  function getSchools2() {
-    setLoading(true);
-    ref.get().then((item) => {
-      const items = item.docs.map((doc) => doc.data());
-      setSchools(items);
-      setLoading(false);
-    });
-    //.catch((err) => {
-    //console.error(err)
-    // })
+  useEffect(() => {
+    getSchools();
+    //getSchools2();
+    // eslint-disable-next-line
+  }, []);
+
+  // ADD FUNCTION
+  function addSchool(newSchool) {
+    // setLoading();
+    ref
+      //.doc()
+      .doc(newSchool.id)
+      .set(newSchool)
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
-  useEffect(() => {
-    // getSchools();
-    getSchools2();
-  }, []);
+  //DELETE FUNCTION
+  function deleteSchool(school) {
+    ref
+      .doc(school.id)
+      .delete()
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
+  // EDIT FUNCTION
+  function editSchool(updatedSchool) {
+    setLoading();
+    ref
+      .doc(updatedSchool.id)
+      .update(updatedSchool)
+      .catch((err) => {
+        console.error(err);
+      });
+  }
 
   if (loading) {
     return <h1>Loading...</h1>;
   }
 
   return (
-    <div>
+    <Fragment>
       <h1>Schools</h1>
+      <div className='inputBox'>
+        <h3>Add New</h3>
+        <input type='text' onChange={(e) => setTitle(e.target.value)} />
+        <textarea onChange={(e) => setDesc(e.target.value)} />
+        <button onClick={() => addSchool({ title, desc, id: uuidv4() })}>
+          Submit
+        </button>
+      </div>
+      <hr />
       {schools.map((school) => (
-        <div key={school.id}>
+        <div className='school' key={school.id}>
           <h2>{school.title}</h2>
           <p>{school.desc}</p>
+          <button onClick={() => deleteSchool(school)}>X</button>
+          <button
+            onClick={() =>
+              editSchool({ title: school.title, desc, id: school.id })
+            }
+          >
+            Edit
+          </button>
         </div>
       ))}
-    </div>
+    </Fragment>
   );
 }
 
 export default App;
+
+//DOCS: https://firebase.google.com/docs/firestore/

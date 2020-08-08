@@ -42,7 +42,6 @@ function App() {
 
   // ADD FUNCTION
   function addSchool(newSchool) {
-    // setLoading();
     ref
       //.doc()
       .doc(newSchool.id)

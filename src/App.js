@@ -71,8 +71,6 @@ function App() {
       });
   }
 
-  console.log(schools);
-
   if (loading) {
     return <h1>Loading...</h1>;
   }

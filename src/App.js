@@ -23,20 +23,19 @@ function App() {
     });
   }
 
-  // SINGLE GET FUNCTION
-  // You might want to add a .catch() method for errors
-  // function getSchools2() {
-  //   setLoading(true);
-  //   ref.get().then((item) => {
-  //     const items = item.docs.map((doc) => doc.data());
-  //     setSchools(items);
-  //     setLoading(false);
-  //   });
-  // }
+  //SINGLE GET FUNCTION
+  function getSchools2() {
+    setLoading(true);
+    ref.get().then((item) => {
+      const items = item.docs.map((doc) => doc.data());
+      setSchools(items);
+      setLoading(false);
+    });
+  }
 
   useEffect(() => {
-    getSchools();
-    //getSchools2();
+    // getSchools();
+    getSchools2();
     // eslint-disable-next-line
   }, []);
 
@@ -71,6 +70,8 @@ function App() {
         console.error(err);
       });
   }
+
+  console.log(schools);
 
   if (loading) {
     return <h1>Loading...</h1>;

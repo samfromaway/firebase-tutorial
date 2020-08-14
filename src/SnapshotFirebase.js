@@ -31,7 +31,7 @@ function SnapshotFirebase() {
   // ADD FUNCTION
   function addSchool(newSchool) {
     ref
-      //.doc()
+      //.doc() use if for some reason you want that firestore generates the id
       .doc(newSchool.id)
       .set(newSchool)
       .catch((err) => {

@@ -3,7 +3,7 @@ import GetFirebase from './GetFirebase';
 import SnapshotFirebase from './SnapshotFirebase';
 
 function App() {
-  const get = false;
+  const get = true;
   return <Fragment>{get ? <GetFirebase /> : <SnapshotFirebase />}</Fragment>;
 }
 

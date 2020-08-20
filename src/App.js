@@ -1,10 +1,21 @@
-import React, { Fragment } from 'react';
-import GetFirebase from './GetFirebase';
-import SnapshotFirebase from './SnapshotFirebase';
+import React from "react";
+import GetFirebase from "./GetFirebase";
+import SnapshotFirebase from "./SnapshotFirebase";
+import { AuthProvider } from "./auth/Auth";
+import Login from "./auth/Login";
+import Welcome from "./Welcome";
 
 function App() {
-  const get = true;
-  return <Fragment>{get ? <GetFirebase /> : <SnapshotFirebase />}</Fragment>;
+  const get = false;
+  return (
+    <>
+      <AuthProvider>
+        <Welcome />
+        <Login />
+        {get ? <GetFirebase /> : <SnapshotFirebase />}
+      </AuthProvider>
+    </>
+  );
 }
 
 export default App;

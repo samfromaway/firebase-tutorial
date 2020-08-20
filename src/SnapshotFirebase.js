@@ -1,14 +1,14 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import firebase from './firebase';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState, useEffect, Fragment } from "react";
+import firebase from "./firebase";
+import { v4 as uuidv4 } from "uuid";
 
 function SnapshotFirebase() {
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [title, setTitle] = useState('');
-  const [desc, setDesc] = useState('');
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
 
-  const ref = firebase.firestore().collection('schools');
+  const ref = firebase.firestore().collection("schools");
 
   //REALTIME GET FUNCTION
   function getSchools() {
@@ -63,10 +63,14 @@ function SnapshotFirebase() {
   return (
     <Fragment>
       <h1>Schools (SNAPSHOT)</h1>
-      <div className='inputBox'>
+      <div className="inputBox">
         <h3>Add New</h3>
-        <input type='text' onChange={(e) => setTitle(e.target.value)} />
-        <textarea onChange={(e) => setDesc(e.target.value)} />
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <textarea value={desc} onChange={(e) => setDesc(e.target.value)} />
         <button onClick={() => addSchool({ title, desc, id: uuidv4() })}>
           Submit
         </button>
@@ -74,7 +78,7 @@ function SnapshotFirebase() {
       <hr />
       {loading ? <h1>Loading...</h1> : null}
       {schools.map((school) => (
-        <div className='school' key={school.id}>
+        <div className="school" key={school.id}>
           <h2>{school.title}</h2>
           <p>{school.desc}</p>
           <div>

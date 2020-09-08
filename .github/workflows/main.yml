@@ -1,4 +1,4 @@
-name: Backup Firestore2
+name: Backup Firestore
 
 on:
   schedule:

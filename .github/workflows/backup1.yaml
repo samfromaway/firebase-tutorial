@@ -2,7 +2,7 @@ name: Backup Firestore1
 
 on:
   schedule:
-    - cron: '17 16 * * *'
+    - cron: '29 16 * * *'
 
 env:
   PROJECT_ID: school-directory-2fb99

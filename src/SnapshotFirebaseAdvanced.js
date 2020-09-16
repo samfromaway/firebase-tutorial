@@ -5,7 +5,7 @@ import { AuthContext } from './auth/Auth';
 
 function SnapshotFirebaseAdvanced() {
   const { currentUser } = useContext(AuthContext);
-  //const currentUserId = currentUser ? currentUser.uid : null;
+  const currentUserId = currentUser ? currentUser.uid : null;
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
@@ -49,6 +49,8 @@ function SnapshotFirebaseAdvanced() {
       id: uuidv4(),
       owner,
       ownerEmail,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      lastUpdate: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
     ref
@@ -71,7 +73,10 @@ function SnapshotFirebaseAdvanced() {
 
   // EDIT FUNCTION
   function editSchool(school) {
-    const updatedSchool = { score: +score };
+    const updatedSchool = {
+      score: +score,
+      lastUpdate: firebase.firestore.FieldValue.serverTimestamp(),
+    };
     setLoading();
     ref
       .doc(school.id)

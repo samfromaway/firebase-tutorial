@@ -5,7 +5,7 @@ import { AuthContext } from './auth/Auth';
 
 function SnapshotFirebaseAdvanced() {
   const { currentUser } = useContext(AuthContext);
-  const currentUserId = currentUser ? currentUser.uid : null;
+  //const currentUserId = currentUser ? currentUser.uid : null;
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
@@ -18,8 +18,8 @@ function SnapshotFirebaseAdvanced() {
   function getSchools() {
     setLoading(true);
     ref
-      .where('owner', '==', currentUserId)
-      .where('title', '==', 'School1') // does not need index
+      //.where('owner', '==', currentUserId)
+      //.where('title', '==', 'School1') // does not need index
       //.where('score', '<=', 10)    // needs index
       //.orderBy('owner', 'asc')
       //.limit(3)

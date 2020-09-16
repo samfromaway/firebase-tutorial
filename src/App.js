@@ -8,14 +8,14 @@ import SnapshotFirebaseAdvanced from './SnapshotFirebaseAdvanced';
 
 function App() {
   //const get = false;
-  const advanced = true;
+
   return (
     <>
       <AuthProvider>
         <Welcome />
         <Login />
         {/* {get ? <GetFirebase /> : <SnapshotFirebase />} */}
-        {advanced && <SnapshotFirebaseAdvanced />}
+        <SnapshotFirebaseAdvanced />
       </AuthProvider>
     </>
   );

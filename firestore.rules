@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /schools/{itemId}{
+
+      allow read: if true;
+
+      allow create: if true;
+
+      allow update: if true;
+
+      allow delete: if true;
+
+    }
+  }
+}
+
+
+//firebase deploy --only firestore:rules

@@ -18,8 +18,8 @@ function SnapshotFirebaseAdvanced() {
   function getSchools() {
     setLoading(true);
     ref
-      .where('owner', '==', currentUserId)
-      .where('title', '==', 'School1') // does not need index
+      //.where('owner', '==', currentUserId)
+      //.where('title', '==', 'School1') // does not need index
       //.where('score', '<=', 10)    // needs index
       //.orderBy('owner', 'asc')
       //.limit(3)
@@ -49,6 +49,8 @@ function SnapshotFirebaseAdvanced() {
       id: uuidv4(),
       owner,
       ownerEmail,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      lastUpdate: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
     ref
@@ -71,7 +73,10 @@ function SnapshotFirebaseAdvanced() {
 
   // EDIT FUNCTION
   function editSchool(school) {
-    const updatedSchool = { score: +score };
+    const updatedSchool = {
+      score: +score,
+      lastUpdate: firebase.firestore.FieldValue.serverTimestamp(),
+    };
     setLoading();
     ref
       .doc(school.id)

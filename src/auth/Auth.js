@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
-import firebase from "../firebase.js";
+import { onAuthStateChanged } from 'firebase/auth';
+import React, { useEffect, useState } from 'react';
+import { auth } from '../firebase';
 
 export const AuthContext = React.createContext();
 
@@ -8,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+    onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setLoading(false);
     });
@@ -18,10 +19,10 @@ export const AuthProvider = ({ children }) => {
     return (
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "80vh",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '80vh',
         }}
       >
         <h1>Loading User...</h1>

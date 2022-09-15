@@ -1,14 +1,17 @@
-import React, { useState } from "react";
-import firebase from "./../firebase";
+import React, { useState } from 'react';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
+import { auth } from '../firebase';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const register = () => {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
+    createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
         resetInput();
       })
@@ -18,9 +21,7 @@ const Login = () => {
   };
 
   const login = () => {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         resetInput();
       })
@@ -30,12 +31,12 @@ const Login = () => {
   };
 
   const logOut = () => {
-    firebase.auth().signOut();
+    signOut(auth);
   };
 
   const resetInput = () => {
-    setEmail("");
-    setPassword("");
+    setEmail('');
+    setPassword('');
   };
 
   return (

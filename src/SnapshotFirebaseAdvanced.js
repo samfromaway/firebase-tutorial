@@ -1,45 +1,87 @@
 import React, { useState, useEffect, Fragment, useContext } from 'react';
-import firebase from './firebase';
+import {
+  doc,
+  onSnapshot,
+  updateDoc,
+  setDoc,
+  deleteDoc,
+  collection,
+  serverTimestamp,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  limit,
+} from 'firebase/firestore';
+import db from './firebase';
 import { v4 as uuidv4 } from 'uuid';
-import { AuthContext } from './auth/Auth';
 
 function SnapshotFirebaseAdvanced() {
-  const { currentUser } = useContext(AuthContext);
-  const currentUserId = currentUser ? currentUser.uid : null;
+  const colletionRef = collection(db, 'schools');
+
+  // const { currentUser } = useContext(AuthContext);
+  const currentUser = null;
+  const currentUserId = null; // currentUser ? currentUser.uid : null;
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [score, setScore] = useState('');
 
-  const ref = firebase.firestore().collection('schools');
+  //ONE TIME GET FUNCTION
+  // useEffect(() => {
+  //   const getSchools = async () => {
+  //     setLoading(true);
+
+  //     const querySnapshot = await getDocs(dbRef);
+  //     const items = [];
+
+  //     querySnapshot.forEach((doc) => {
+  //       items.push(doc.data());
+  //     });
+  //     setSchools(items);
+  //     setLoading(false);
+  //   };
+
+  //   try {
+  //     getSchools();
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+
+  //   // eslint-disable-next-line
+  // }, []);
 
   //REALTIME GET FUNCTION
-  function getSchools() {
-    setLoading(true);
-    ref
-      //.where('owner', '==', currentUserId)
-      //.where('title', '==', 'School1') // does not need index
-      //.where('score', '<=', 10)    // needs index
-      //.orderBy('owner', 'asc')
-      //.limit(3)
-      .onSnapshot((querySnapshot) => {
-        const items = [];
-        querySnapshot.forEach((doc) => {
-          items.push(doc.data());
-        });
-        setSchools(items);
-        setLoading(false);
-      });
-  }
-
   useEffect(() => {
-    getSchools();
+    const q = query(
+      colletionRef,
+      //  where('owner', '==', 'unknown'),
+      where('title', '==', 'School1'), // does not need index
+      where('score', '<=', 100) // needs index  https://firebase.google.com/docs/firestore/query-data/indexing?authuser=1&hl=en
+      //  orderBy('score', 'asc'), // be aware of limitations: https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations
+      //  limit(1)
+    );
+
+    setLoading(true);
+    // const unsub = onSnapshot(q, (querySnapshot) => {
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      const items = [];
+      querySnapshot.forEach((doc) => {
+        items.push(doc.data());
+      });
+      setSchools(items);
+      setLoading(false);
+    });
+    return () => {
+      unsub();
+    };
+
     // eslint-disable-next-line
   }, []);
 
   // ADD FUNCTION
-  function addSchool() {
+  async function addSchool() {
     const owner = currentUser ? currentUser.uid : 'unknown';
     const ownerEmail = currentUser ? currentUser.email : 'unknown';
     const newSchool = {
@@ -49,41 +91,41 @@ function SnapshotFirebaseAdvanced() {
       id: uuidv4(),
       owner,
       ownerEmail,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      lastUpdate: firebase.firestore.FieldValue.serverTimestamp(),
+      createdAt: serverTimestamp(),
+      lastUpdate: serverTimestamp(),
     };
 
-    ref
-      .doc(newSchool.id)
-      .set(newSchool)
-      .catch((err) => {
-        console.error(err);
-      });
+    try {
+      const schoolRef = doc(colletionRef, newSchool.id);
+      await setDoc(schoolRef, newSchool);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   //DELETE FUNCTION
-  function deleteSchool(school) {
-    ref
-      .doc(school.id)
-      .delete()
-      .catch((err) => {
-        console.error(err);
-      });
+  async function deleteSchool(school) {
+    try {
+      const schoolRef = doc(colletionRef, school.id);
+      await deleteDoc(schoolRef, schoolRef);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   // EDIT FUNCTION
-  function editSchool(school) {
+  async function editSchool(school) {
     const updatedSchool = {
       score: +score,
-      lastUpdate: firebase.firestore.FieldValue.serverTimestamp(),
+      lastUpdate: serverTimestamp(),
     };
-    setLoading();
-    ref
-      .doc(school.id)
-      .update(updatedSchool)
-      .catch((err) => {
-        console.error(err);
-      });
+
+    try {
+      const schoolRef = doc(colletionRef, school.id);
+      updateDoc(schoolRef, updatedSchool);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (

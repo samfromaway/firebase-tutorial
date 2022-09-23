@@ -15,13 +15,14 @@ import {
 } from 'firebase/firestore';
 import db from './firebase';
 import { v4 as uuidv4 } from 'uuid';
+import { AuthContext } from './auth/Auth';
 
 function SnapshotFirebaseAdvanced() {
   const colletionRef = collection(db, 'schools');
 
-  // const { currentUser } = useContext(AuthContext);
-  const currentUser = null;
-  const currentUserId = null; // currentUser ? currentUser.uid : null;
+  const { currentUser } = useContext(AuthContext);
+
+  const currentUserId = currentUser ? currentUser.uid : null;
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
@@ -56,16 +57,16 @@ function SnapshotFirebaseAdvanced() {
   useEffect(() => {
     const q = query(
       colletionRef,
-      //  where('owner', '==', 'unknown'),
+      //  where('owner', '==', currentUserId),
       where('title', '==', 'School1'), // does not need index
-      where('score', '<=', 100) // needs index  https://firebase.google.com/docs/firestore/query-data/indexing?authuser=1&hl=en
-      //  orderBy('score', 'asc'), // be aware of limitations: https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations
-      //  limit(1)
+      //  where('score', '<=', 100) // needs index  https://firebase.google.com/docs/firestore/query-data/indexing?authuser=1&hl=en
+      orderBy('score', 'asc'), // be aware of limitations: https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations
+      limit(1)
     );
 
     setLoading(true);
     // const unsub = onSnapshot(q, (querySnapshot) => {
-    const unsub = onSnapshot(q, (querySnapshot) => {
+    const unsub = onSnapshot(colletionRef, (querySnapshot) => {
       const items = [];
       querySnapshot.forEach((doc) => {
         items.push(doc.data());
@@ -84,6 +85,7 @@ function SnapshotFirebaseAdvanced() {
   async function addSchool() {
     const owner = currentUser ? currentUser.uid : 'unknown';
     const ownerEmail = currentUser ? currentUser.email : 'unknown';
+
     const newSchool = {
       title,
       desc,

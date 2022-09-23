@@ -5,15 +5,12 @@ import Welcome from './Welcome';
 import SnapshotFirebaseAdvanced from './SnapshotFirebaseAdvanced';
 
 function App() {
-  //const get = false;
   return (
-    <>
-      <AuthProvider>
-        <Welcome />
-        <Login />
-        <SnapshotFirebaseAdvanced />
-      </AuthProvider>
-    </>
+    <AuthProvider>
+      <Welcome />
+      <Login />
+      <SnapshotFirebaseAdvanced />
+    </AuthProvider>
   );
 }
 

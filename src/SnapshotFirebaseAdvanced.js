@@ -58,10 +58,10 @@ function SnapshotFirebaseAdvanced() {
     const q = query(
       colletionRef,
       //  where('owner', '==', currentUserId),
-      where('title', '==', 'School1'), // does not need index
+      where('title', '==', 'School1') // does not need index
       //  where('score', '<=', 100) // needs index  https://firebase.google.com/docs/firestore/query-data/indexing?authuser=1&hl=en
-      orderBy('score', 'asc'), // be aware of limitations: https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations
-      limit(1)
+      // orderBy('score', 'asc'), // be aware of limitations: https://firebase.google.com/docs/firestore/query-data/order-limit-data#limitations
+      // limit(1)
     );
 
     setLoading(true);
